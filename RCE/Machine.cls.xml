@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="RCE.Machine">
+<Super>%Persistent</Super>
+<TimeCreated>63474,50495.240588</TimeCreated>
+
+<Property name="Description">
+<Type>%String</Type>
+</Property>
+
+<Property name="IP">
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="39"/>
+</Property>
+
+<Property name="OS">
+<Type>OS</Type>
+<Cardinality>children</Cardinality>
+<Inverse>Machine</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^RCE.MachineD</DataLocation>
+<DefaultData>MachineDefaultData</DefaultData>
+<IdLocation>^RCE.MachineD</IdLocation>
+<IndexLocation>^RCE.MachineI</IndexLocation>
+<StreamLocation>^RCE.MachineS</StreamLocation>
+<Data name="MachineDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>IP</Value>
+</Value>
+<Value name="4">
+<Value>OS</Value>
+</Value>
+<Value name="5">
+<Value>Description</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

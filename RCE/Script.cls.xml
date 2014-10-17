@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="RCE.Script">
+<Super>%Persistent,%ListOfObjects</Super>
+<TimeCreated>63476,79684.052458</TimeCreated>
+
+<Property name="Type">
+<Type>%String</Type>
+<InitialExpression>"Empty"</InitialExpression>
+<Parameter name="VALUELIST" value=",OS,Instance,Hybrid,Empty"/>
+</Property>
+
+<Method name="%OnValidateObject">
+<Description><![CDATA[
+This callback method is invoked by the <METHOD>%ValidateObject</METHOD> method to 
+provide notification that the current object is being validated.
+
+<P>If this method returns an error then <METHOD>%ValidateObject</METHOD> will fail.]]></Description>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	return:(..Count() = 0) $$$ERROR($$$GeneralError,"No commands found")
+	return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="TypeGet">
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	return:(..Count() = 0) "Empty"
+	set oscount = 0
+	set incount = 0
+	for i=1:1:..Count() {
+		if (..GetAt(i).Level = 0) {
+			set oscount = oscount+1
+		} else {
+			set incount = incount+1
+		}
+	}
+	return:(oscount = 0) "Instance"
+	return:(incount = 0) "OS"
+	return "Hybrid"
+]]></Implementation>
+</Method>
+
+<Method name="ConvertInstanceScriptToLinuxCommand">
+<FormalSpec>Instance:%String="Cache",Namespase="%SYS"</FormalSpec>
+<ReturnType>RCE.Command</ReturnType>
+<Implementation><![CDATA[
+	set st = ..%ValidateObject()
+	return:$$$ISERR(st) st
+		
+	do ..AddLinuxInstanceHeader(Instance,Namespase)
+	
+	set command = ""
+	
+	for i=1:1:..Count() {
+		set command = command _ ..GetAt(i).Command _ $c(10)
+	}
+	
+	set command = command _ "END"
+	set command = $REPLACE(command,"$","\$") // because bash
+	
+	return ##class(Command).%New(command,0)
+]]></Implementation>
+</Method>
+
+<Method name="AddLinuxInstanceHeader">
+<FormalSpec>Instance:%String="Cache",Namespase="%SYS"</FormalSpec>
+<ReturnType>RCE.Script</ReturnType>
+<Implementation><![CDATA[
+	do ..InsertAt(##class(Command).%New("csession "_Instance _ " << END ",1),1)
+	do ..InsertAt(##class(Command).%New("zn """_Namespase_"""", 1),2)
+	do ..Insert(##class(Command).%New("h",1))
+]]></Implementation>
+</Method>
+
+<Method name="%OnAddToSaveSet">
+<Description><![CDATA[
+This callback method is invoked when the current object is added to the SaveSet,
+either because %Save() was invoked on this object or on an object that references this object.
+%OnAddToSaveSet can modify the current object. It can also add other objects to the current
+SaveSet by invoking %AddToSaveSet or remove objects by calling %RemoveFromSaveSet.
+
+<P>If this method returns an error status then %Save() will fail and the transaction
+will be rolled back.]]></Description>
+<FormalSpec>depth:%Integer=3,insert:%Integer=0,callcount:%Integer=0</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	set ..Type = ..TypeGet()
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^RCE.ScriptD</DataLocation>
+<DefaultData>ScriptDefaultData</DefaultData>
+<IdLocation>^RCE.ScriptD</IdLocation>
+<IndexLocation>^RCE.ScriptI</IndexLocation>
+<StreamLocation>^RCE.ScriptS</StreamLocation>
+<Data name="ScriptDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Commands</Value>
+</Value>
+<Value name="3">
+<Value>ElementType</Value>
+</Value>
+<Value name="4">
+<Value>Size</Value>
+</Value>
+<Value name="5">
+<Value>Type</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

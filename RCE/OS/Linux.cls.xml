@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="RCE.OS.Linux">
+<IncludeCode>%occErrors</IncludeCode>
+<Super>RCE.OS</Super>
+<TimeCreated>63474,55442.505165</TimeCreated>
+
+<Property name="AuthType">
+<Type>%String</Type>
+<InitialExpression>"Password"</InitialExpression>
+<Parameter name="VALUELIST" value=",Password,Key"/>
+</Property>
+
+<Property name="PrivateKey">
+<Description>
+Path to PrivateKey</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="1000"/>
+</Property>
+
+<Property name="PublicKey">
+<Description>
+Path to PublicKey</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="1000"/>
+</Property>
+
+<Property name="PrivateKeyPassword">
+<Type>%String</Type>
+</Property>
+
+<Method name="ExecuteScript">
+<FormalSpec>Script:RCE.Script</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	#dim ssh as %Net.SSH.Session
+	do ..Auth(.ssh)
+	for i=1:1:Script.Count() {
+		set command = Script.GetAt(i).Command
+			set st=..RemoteExecUnixSSH(.ssh,command,.response)
+		if $$$ISERR(st)	{
+			w $system.Status.GetErrorText(st)
+		}
+
+		if response '= "" {
+			//make do with response (there is usually none)
+		}
+	}
+	
+	return ssh.Disconnect()
+]]></Implementation>
+</Method>
+
+<Method name="Auth">
+<FormalSpec><![CDATA[&ssh]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ssh = ##class(%Net.SSH.Session).%New()
+	set st =ssh.Connect(..Machine.IP)
+	set count = 1
+	while (st '= 1) && (count < 20) {
+		hang 5
+		set st = ssh.Connect(..Machine.IP)
+		set count = count + 1
+	}
+	return:$$$ISERR(st) st
+
+	if (..AuthType = "Password") {
+		set st =  ssh.AuthenticateWithUsername(..Username,..Password)
+	} else {
+		set st = ssh.AuthenticateWithKeyPair(..Username,..PublicKey,..PrivateKey,..PrivateKeyPassword)
+	}
+	
+	return st
+]]></Implementation>
+</Method>
+
+<Method name="RemoteExecUnixSSH">
+<Description><![CDATA[
+Pass authenticated ssh object to execute command.<br>
+<b>ssh</b> - connected and authenticated object of %Net.SSH.Session class.<br>
+<b>command</b> - command to execute.<br>
+<b>response</b> - pass it by referense, to write server response inside. Usually empty as prompt is not returned.<br>
+<b>timeout</b> - how long to wait for response.]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&ssh:%Net.SSH.Session,Command:%String,&Response:%String,Timeout:%Integer=3600]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	Set st = ssh.Execute(Command,.tDevice)
+	return:$$$ISERR(st) st	
+	use tDevice
+	try {
+		read X:Timeout
+	} catch e {
+		set X= "" //nothing returned
+	}
+	close tDevice
+	use 0
+	Set Response=X
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DefaultData>LinuxDefaultData</DefaultData>
+<Data name="LinuxDefaultData">
+<Structure>listnode</Structure>
+<Subscript>"Linux"</Subscript>
+<Value name="1">
+<Value>AuthType</Value>
+</Value>
+<Value name="2">
+<Value>PrivateKey</Value>
+</Value>
+<Value name="3">
+<Value>PublicKey</Value>
+</Value>
+<Value name="4">
+<Value>PrivateKeyPassword</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

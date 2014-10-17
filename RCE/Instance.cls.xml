@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="RCE.Instance">
+<Super>%Persistent</Super>
+<TimeCreated>63474,52493.217484</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+<InitialExpression>"Cache"</InitialExpression>
+</Property>
+
+<Property name="Version">
+<Type>%String</Type>
+</Property>
+
+<Property name="Security">
+<Type>%String</Type>
+<Parameter name="VALUELIST" value=",Minimal,Normal,Locked Down"/>
+</Property>
+
+<Property name="User">
+<Type>%String</Type>
+</Property>
+
+<Property name="Pass">
+<Type>%String</Type>
+</Property>
+
+<Property name="OS">
+<Type>OS</Type>
+<Cardinality>parent</Cardinality>
+<Inverse>Instances</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="ExecuteScript">
+<FormalSpec>Script:RCE.Script,Namespace="%SYS"</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = ..%ValidateObject()
+	return:$$$ISERR(st) st
+	
+	do Script.GetNext(.i)
+	while (i) {
+		if (Script.GetAt(i).Level = 1) {
+			set instancescript = ##class(RCE.Script).%New()
+			for j=i:1:Script.Count() {
+				if (Script.GetAt(j).Level '= 1) {
+					set j=j-1
+					quit
+				}
+				do instancescript.Insert(Script.GetAt(j))
+				//we determined, that commands from i to j are instance level and formed new list from them
+			}
+
+			for k=j:-1:i {
+				do Script.RemoveAt(k)
+			}
+
+			do Script.InsertAt(instancescript.ConvertInstanceScriptToLinuxCommand(..Name,Namespace),i)
+		}
+		do Script.GetNext(.i)		
+	}
+	
+	return ..OS.ExecuteScript(Script)
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^RCE.InstanceD</DataLocation>
+<DefaultData>InstanceDefaultData</DefaultData>
+<IdLocation>^RCE.InstanceD</IdLocation>
+<IndexLocation>^RCE.InstanceI</IndexLocation>
+<StreamLocation>^RCE.InstanceS</StreamLocation>
+<Data name="InstanceDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Version</Value>
+</Value>
+<Value name="3">
+<Value>Name</Value>
+</Value>
+<Value name="4">
+<Value>Security</Value>
+</Value>
+<Value name="5">
+<Value>User</Value>
+</Value>
+<Value name="6">
+<Value>Pass</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

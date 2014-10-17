@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="RCE.OS">
+<Super>%Persistent</Super>
+<TimeCreated>63474,50472.986157</TimeCreated>
+
+<Property name="Username">
+<Type>%String</Type>
+</Property>
+
+<Property name="Password">
+<Type>%String</Type>
+</Property>
+
+<Property name="Bit">
+<Type>%String</Type>
+<Parameter name="VALUELIST" value=",x86,x64"/>
+</Property>
+
+<Property name="Machine">
+<Type>Machine</Type>
+<Cardinality>parent</Cardinality>
+<Inverse>OS</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="Instances">
+<Type>Instance</Type>
+<Cardinality>children</Cardinality>
+<Inverse>OS</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="ExecuteScript">
+<FormalSpec>Script:RCE.Script</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^RCE.OSD</DataLocation>
+<DefaultData>OSDefaultData</DefaultData>
+<IdLocation>^RCE.OSD</IdLocation>
+<IndexLocation>^RCE.OSI</IndexLocation>
+<StreamLocation>^RCE.OSS</StreamLocation>
+<Data name="OSDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Username</Value>
+</Value>
+<Value name="3">
+<Value>Password</Value>
+</Value>
+<Value name="4">
+<Value>Instance</Value>
+</Value>
+<Value name="5">
+<Value>Instances</Value>
+</Value>
+<Value name="6">
+<Value>Bit</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
