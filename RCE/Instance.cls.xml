@@ -57,7 +57,7 @@
 				do Script.RemoveAt(k)
 			}
 
-			do Script.InsertAt(instancescript.ConvertInstanceScriptToLinuxCommand(..Name,Namespace),i)
+			do Script.InsertAt(instancescript.ConvertInstanceScriptToLinuxCommand(..Name,..User,..Pass,Namespace),i)
 		}
 		do Script.GetNext(.i)		
 	}

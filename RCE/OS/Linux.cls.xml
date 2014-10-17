@@ -39,6 +39,7 @@ Path to PublicKey</Description>
 	for i=1:1:Script.Count() {
 		set command = Script.GetAt(i).Command
 			set st=..RemoteExecUnixSSH(.ssh,command,.response)
+			w command,"  ",response,!
 		if $$$ISERR(st)	{
 			w $system.Status.GetErrorText(st)
 		}
