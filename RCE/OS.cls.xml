@@ -42,7 +42,7 @@
 <Method name="%OnNew">
 <Description><![CDATA[
 Creates new RCE.OS.Linux or RCE.OS.Windows object, depending on OS value.<br>
-<b>OS</b> - string, values: windows, linux. Anything else returns RCE.OS object.]]></Description>
+<b>OS</b> - string, values (case-insensitive) : windows, linux. Anything else returns RCE.OS object.]]></Description>
 <FormalSpec>OS:%String</FormalSpec>
 <Private>1</Private>
 <ReturnType>%Status</ReturnType>
