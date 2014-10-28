@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="RCE.OS">
+<IncludeCode>%occErrors</IncludeCode>
 <Super>%Persistent</Super>
 <TimeCreated>63474,50472.986157</TimeCreated>
 
@@ -35,6 +36,23 @@
 <FormalSpec>Script:RCE.Script</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="%OnNew">
+<Description><![CDATA[
+Creates new RCE.OS.Linux or RCE.OS.Windows object, depending on OS value.<br>
+<b>OS</b> - string, values: windows, linux. Anything else returns RCE.OS object.]]></Description>
+<FormalSpec>OS:%String</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	return:($d(OS)'=1) $$$OK
+	set OS = $ZCVT(OS,"l")
+	return:(OS = "linux") ##class(RCE.OS.Linux).%New()
+	return:(OS = "windows") ##class(RCE.OS.Windows).%New()
+	return $$$OK //$$$ERROR($$$InvalidArgument)
 ]]></Implementation>
 </Method>
 
