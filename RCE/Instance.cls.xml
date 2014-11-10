@@ -50,7 +50,6 @@
 
 <Method name="BuildScriptLinux">
 <FormalSpec><![CDATA[&Script:RCE.Script,Namespace:%String="%SYS"]]></FormalSpec>
-<ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	do Script.GetNext(.i)
 	while (i) {
@@ -81,9 +80,8 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set filename  = ##class(%File).TempFilename("bat")
-	Set file=##class(%File).%New(filename)
-	Do file.Open("WSN")
-	//Do file.WriteLine("This is a line of text")
+	set file=##class(%File).%New(filename)
+	do file.Open("WSN")
 	
 	do Script.GetNext(.i)
 	while (i) {
@@ -104,8 +102,7 @@
 			}
 
 			do Script.InsertAt(instancescript.ConvertInstanceScriptToWindowsCommand(..Name,..User,..Pass, Namespace, ..OS.CtermDir),i)
-
-			//do Script.InsertAt(##class(RCE.Command).%New("del commands.txt",0),i+1)
+			do Script.InsertAt(##class(RCE.Command).%New("del commands.txt",0),i+1)
 						
 			
 		} 
@@ -113,10 +110,10 @@
 		do file.WriteLine(Script.GetAt(i).Command)
 		do Script.GetNext(.i)		
 	}
-	do file.%Save()
+	set st = file.%Save()
 	do file.Close()
 	set Script = filename
-	return $$$OK
+	return st
 ]]></Implementation>
 </Method>
 

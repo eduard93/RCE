@@ -4,6 +4,10 @@
 <Super>%Persistent,%ListOfObjects</Super>
 <TimeCreated>63476,79684.052458</TimeCreated>
 
+<Property name="Name">
+<Type>%String</Type>
+</Property>
+
 <Property name="Type">
 <Type>%String</Type>
 <InitialExpression>"Empty"</InitialExpression>
