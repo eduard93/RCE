@@ -33,13 +33,13 @@ Path to PublicKey</Description>
 <FormalSpec>Script:RCE.Script</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	
+	for i=1:1:Script.Count() {w Script.GetAt(i).Command,!}
 	#dim ssh as %Net.SSH.Session
 	do ..Auth(.ssh)
 	for i=1:1:Script.Count() {
 		set command = Script.GetAt(i).Command
 			set st=..RemoteExecUnixSSH(.ssh,command,.response)
-			w command,"  ",response,!
+			//w i,command,"  ",response,!
 		if $$$ISERR(st)	{
 			w $system.Status.GetErrorText(st)
 		}

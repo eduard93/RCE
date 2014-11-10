@@ -34,12 +34,24 @@
 </Property>
 
 <Method name="ExecuteScript">
-<FormalSpec>Script:RCE.Script,Namespace="%SYS"</FormalSpec>
+<FormalSpec>Script:RCE.Script,Namespace:%String="%SYS"</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st = ..%ValidateObject()
 	return:$$$ISERR(st) st
 	
+	if ($classname(..OS) [ "Linux") do ..BuildScriptLinux(.Script, Namespace)
+	if ($classname(..OS) [ "Windows") do ..BuildScriptWindows(.Script, Namespace)
+	
+	set st = ..OS.ExecuteScript(Script)
+	return st
+]]></Implementation>
+</Method>
+
+<Method name="BuildScriptLinux">
+<FormalSpec><![CDATA[&Script:RCE.Script,Namespace:%String="%SYS"]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
 	do Script.GetNext(.i)
 	while (i) {
 		if (Script.GetAt(i).Level = 1) {
@@ -57,12 +69,54 @@
 				do Script.RemoveAt(k)
 			}
 
-			do Script.InsertAt(instancescript.ConvertInstanceScriptToLinuxCommand(..Name,..User,..Pass,Namespace),i)
+			do Script.InsertAt(instancescript.ConvertInstanceScriptToLinuxCommand(..Name,..User,..Pass, Namespace),i)
 		}
 		do Script.GetNext(.i)		
 	}
+]]></Implementation>
+</Method>
+
+<Method name="BuildScriptWindows">
+<FormalSpec><![CDATA[&Script:RCE.Script,Namespace:%String="%SYS"]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set filename  = ##class(%File).TempFilename("bat")
+	Set file=##class(%File).%New(filename)
+	Do file.Open("WSN")
+	//Do file.WriteLine("This is a line of text")
 	
-	return ..OS.ExecuteScript(Script)
+	do Script.GetNext(.i)
+	while (i) {
+		if (Script.GetAt(i).Level = 1) {
+			//do file.WriteLine(Script.GetAt(i).Command)
+			set instancescript = ##class(RCE.Script).%New()
+			for j=i:1:Script.Count() {
+				if (Script.GetAt(j).Level '= 1) {
+					set j=j-1
+					quit
+				}
+				do instancescript.Insert(Script.GetAt(j))
+				//we determined, that commands from i to j are instance level and formed new list from them
+			}
+			
+			for k=j:-1:i {
+				do Script.RemoveAt(k)
+			}
+
+			do Script.InsertAt(instancescript.ConvertInstanceScriptToWindowsCommand(..Name,..User,..Pass, Namespace, ..OS.CtermDir),i)
+
+			//do Script.InsertAt(##class(RCE.Command).%New("del commands.txt",0),i+1)
+						
+			
+		} 
+			
+		do file.WriteLine(Script.GetAt(i).Command)
+		do Script.GetNext(.i)		
+	}
+	do file.%Save()
+	do file.Close()
+	set Script = filename
+	return $$$OK
 ]]></Implementation>
 </Method>
 

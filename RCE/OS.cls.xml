@@ -33,7 +33,6 @@
 </Property>
 
 <Method name="ExecuteScript">
-<FormalSpec>Script:RCE.Script</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[	Quit $$$OK
 ]]></Implementation>

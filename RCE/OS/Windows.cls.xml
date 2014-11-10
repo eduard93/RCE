@@ -4,8 +4,35 @@
 <Super>RCE.OS</Super>
 <TimeCreated>63474,50750.449238</TimeCreated>
 
+<Property name="CtermDir">
+<Type>%String</Type>
+<InitialExpression>"C:\InterSystems\Cache\bin\"</InitialExpression>
+</Property>
+
+<Method name="ExecuteScript">
+<FormalSpec>Filename:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set command = ^settings("exec") _ " \\" _ ..Machine.IP _ " -u " _..Username _ " -p " _ ..Password _ " -accepteula -i -s -c -f " _ Filename
+	w command,!
+	set st = $zf(-1,command)
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
+<DefaultData>WindowsDefaultData</DefaultData>
+<Data name="WindowsDefaultData">
+<Structure>listnode</Structure>
+<Subscript>"Windows"</Subscript>
+<Value name="1">
+<Value>ctermdir</Value>
+</Value>
+<Value name="2">
+<Value>CtermDir</Value>
+</Value>
+</Data>
 </Storage>
 </Class>
 </Export>

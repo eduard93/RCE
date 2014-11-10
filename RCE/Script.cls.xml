@@ -66,6 +66,48 @@ provide notification that the current object is being validated.
 ]]></Implementation>
 </Method>
 
+<Method name="EscapeWindowsCMD">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set escape = "^ & < > | ' ` , ; = ( )"
+	for i=1:1:$Length(escape," ") {
+		set char = $Piece(escape," ",i)
+		set String = $Replace(String,char,"^"_char)
+	}
+	set String = $Replace(String,"%","%%")
+	return String
+]]></Implementation>
+</Method>
+
+<Method name="ConvertInstanceScriptToWindowsCommand">
+<FormalSpec>Instance:%String="Cache",User:%String="",Password:%String="",Namespase:%String="%SYS",CtermDir:%String="C:\InterSystems\Cache\bin\"</FormalSpec>
+<ReturnType>RCE.Command</ReturnType>
+<Implementation><![CDATA[
+	set st = ..%ValidateObject()
+	return:$$$ISERR(st) st
+		
+	set command = "(" _ $c(13,10) _ "echo pause: 10" _ $c(13,10)
+	
+	if (User'="")  {
+		set command = command _ "echo send: " _ User _ "^<CR^>" _ $c(13,10)
+		set command = command _ "echo send: " _ Password _ "^<CR^>" _ $c(13,10)
+	} 
+	
+	set command = command _ "echo send: zn """ _ Namespase _ """^<CR^>" _$c(13,10)
+	
+	for i=1:1:..Count() {
+		set command = command _ "echo send: " _ ..EscapeWindowsCMD(..GetAt(i).Command) _ "^<CR^>" _ $c(13,10)
+	}
+	
+	set command = command _ "echo pause: 10" _ $c(13,10) _"echo terminate" _ $c(13,10) _ ") > commands.txt" _ $c(13,10)
+	set command = command _ ##class(%File).NormalizeDirectory(CtermDir) _ "cterm /console=cn_ap:" _ Instance _ " commands.txt"
+	
+	return ##class(RCE.Command).%New(command,0)
+]]></Implementation>
+</Method>
+
 <Method name="AddLinuxInstanceHeader">
 <FormalSpec>Instance:%String="Cache",User:%String="",Password:%String="",Namespase="%SYS"</FormalSpec>
 <ReturnType>RCE.Script</ReturnType>
