@@ -1,7 +1,10 @@
 RCE
 ===
 
-Remote Code Execution for InterSystems Cache
+Remote Code Execution for InterSystems Cache.<br>
+Can execute code on:<br>
+Windows -> Windows, Linux
+Linux -> Linux
 
 Installation
 ===
