@@ -18,8 +18,6 @@ do ##class(RCE.Tests).TestConnection()</Description>
 			FROM RCE.Instance 
 			WHERE OS->Machine->IP = :ip)
 	set Instance = ##class(RCE.Instance).%OpenId(Id)
-	//set st = Instance.OS.Auth(.ssh)
-	//if $$$ISERR(st) { w $System.Status.GetErrorText(st),! } else { w "Success connect",!}
 	set st = Instance.ExecuteScript(..CreateTestScriptWindows(),"USER")
 	if $$$ISERR(st) { w $System.Status.GetErrorText(st),! } else { w "Success execute",!}
 	
@@ -50,7 +48,7 @@ do ##class(RCE.Tests).CreateTestServer()</Description>
 	set Machine.Description = ^settings("test description")
 	set Machine.IP = ^settings("test ip")
 	
-	set OS = ##class(RCE.OS.Windows).%New()
+	set OS = ##class(RCE.OS).%New(^settings("test osname"))
 	set OS.Username = ^settings("test username")
 	set OS.Password = ^settings("test password")
 	set OS.Bit = ^settings("test osbit")
