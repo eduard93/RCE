@@ -6,10 +6,14 @@
 
 <Property name="Level">
 <Type>%Boolean</Type>
-<InitialExpression>1</InitialExpression>
-<Parameter name="DISPLAYLIST" value=",OS,Instance"/>
-<Parameter name="VALUELIST" value=",0,1"/>
 </Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+//(DISPLAYLIST = ",OS,Instance", VALUELIST = ",0,1") [ InitialExpression = 1 ];
+
+]]></Content>
+</UDLText>
 
 <Property name="Command">
 <Type>%String</Type>
@@ -56,6 +60,9 @@ class then this oref will be the one returned to the caller of %New method.]]></
 </Value>
 <Value name="3">
 <Value>Command</Value>
+</Value>
+<Value name="4">
+<Value>Level2</Value>
 </Value>
 </Data>
 </Storage>
