@@ -103,6 +103,19 @@ Pass authenticated ssh object to execute command.<br>
 ]]></Implementation>
 </Method>
 
+<Method name="CreateTestScript">
+<ClassMethod>1</ClassMethod>
+<ReturnType>RCE.Script</ReturnType>
+<Implementation><![CDATA[
+	set script = ##class(RCE.Script).%New()
+	do script.Insert(##class(RCE.Command).%New("touch 123",0))
+	do script.Insert(##class(RCE.Command).%New("set ^test=1",1))
+	do script.Insert(##class(RCE.Command).%New("set ^test(1)=$zdt($NOW())",1))
+	do script.Insert(##class(RCE.Command).%New("touch 1234",0))
+	return script
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DefaultData>LinuxDefaultData</DefaultData>

@@ -18,7 +18,7 @@ do ##class(RCE.Tests).TestConnection()</Description>
 			FROM RCE.Instance 
 			WHERE OS->Machine->IP = :ip)
 	set Instance = ##class(RCE.Instance).%OpenId(Id)
-	set st = Instance.ExecuteScript(..CreateTestScriptWindows(),"USER")
+	set st = Instance.ExecuteScript(Instance.OS.CreateTestScript(),"USER")
 	if $$$ISERR(st) { w $System.Status.GetErrorText(st),! } else { w "Success execute",!}
 	
 	return st
@@ -64,35 +64,6 @@ do ##class(RCE.Tests).CreateTestServer()</Description>
 	set OS.Machine = Machine
 	
 	return Machine.%Save()
-]]></Implementation>
-</Method>
-
-<Method name="CreateTestScript">
-<ClassMethod>1</ClassMethod>
-<ReturnType>RCE.Script</ReturnType>
-<Implementation><![CDATA[
-	set script = ##class(RCE.Script).%New()
-	do script.Insert(##class(RCE.Command).%New("touch 123",0))
-	do script.Insert(##class(RCE.Command).%New("set ^test=1",1))
-	do script.Insert(##class(RCE.Command).%New("set ^test(1)=2",1))
-	do script.Insert(##class(RCE.Command).%New("touch 1234",0))
-	do script.%Save()
-	return script
-]]></Implementation>
-</Method>
-
-<Method name="CreateTestScriptWindows">
-<ClassMethod>1</ClassMethod>
-<ReturnType>RCE.Script</ReturnType>
-<Implementation><![CDATA[
-	set script = ##class(RCE.Script).%New()
-	do script.Insert(##class(RCE.Command).%New("cd \",0))
-	do script.Insert(##class(RCE.Command).%New("echo start  %date% - %time% >> date.txt",0))
-	do script.Insert(##class(RCE.Command).%New("set ^test=1",1))
-	do script.Insert(##class(RCE.Command).%New("set ^test(1)=2",1))
-	do script.Insert(##class(RCE.Command).%New("echo end %date% - %time% >> date.txt",0))
-	do script.%Save()
-	return script
 ]]></Implementation>
 </Method>
 </Class>

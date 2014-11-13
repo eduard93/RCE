@@ -38,6 +38,17 @@
 ]]></Implementation>
 </Method>
 
+<Method name="CreateTestScript">
+<ClassMethod>1</ClassMethod>
+<ReturnType>RCE.Script</ReturnType>
+<Implementation><![CDATA[
+	set script = ##class(RCE.Script).%New()
+	do script.Insert(##class(RCE.Command).%New("set ^test=1",1))
+	do script.Insert(##class(RCE.Command).%New("set ^test(1)=$zdt($NOW())",1))
+	return script
+]]></Implementation>
+</Method>
+
 <Method name="%OnNew">
 <Description><![CDATA[
 Creates new RCE.OS.Linux or RCE.OS.Windows object, depending on OS value.<br>
