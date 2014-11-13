@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="RCE.Tests">
+<IncludeCode>%occOptions</IncludeCode>
 <Super>%RegisteredObject</Super>
 <TimeCreated>63474,66517.333827</TimeCreated>
 
@@ -60,6 +61,40 @@ do ##class(RCE.Tests).CreateTestServer()</Description>
 	set Instance.User = $g(^settings("test cache user"))
 	set Instance.Pass = $g(^settings("test cache password"))
 	
+	set Instance.OS = OS
+	set OS.Machine = Machine
+	
+	return Machine.%Save()
+]]></Implementation>
+</Method>
+
+<Method name="CreateLocalServer">
+<Description>
+do ##class(RCE.Tests).CreateLocalServer()</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>OSUser:%String,OSPassword:%String,InstanceUser:%String,InstancePassword:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set Machine = ##class(RCE.Machine).%New()
+	set Machine.Description = "local server"
+	set Machine.IP = "127.0.0.1"
+	
+	set OS = ##class(RCE.OS).%New($system.Version.GetOS())
+	set OS.Username = OSUser
+	set OS.Password = OSPassword
+	set OS.Bit = $case($system.Version.Is64Bits(),1:"x64",0:"x86",:"")
+	
+	set Instance = ##class(RCE.Instance).%New()
+	set Instance.Name = ##class(%SYS.System).GetInstanceName()
+	set Instance.Version = $system.Version.GetNumber()
+	do ##class(Security.System).GetInstallationSecuritySetting(.security)
+	
+	set Instance.Security = $case(security,"None":"Minimal",:security)
+	
+	if (security'="None") {
+		set Instance.User = InstanceUser
+		set Instance.Pass = InstancePassword
+	}
 	set Instance.OS = OS
 	set OS.Machine = Machine
 	

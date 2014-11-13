@@ -52,7 +52,7 @@
 <Method name="%OnNew">
 <Description><![CDATA[
 Creates new RCE.OS.Linux or RCE.OS.Windows object, depending on OS value.<br>
-<b>OS</b> - string, values (case-insensitive) : windows, linux. Anything else returns RCE.OS object.]]></Description>
+<b>OS</b> - string, values (case-insensitive) : windows, linux, unix. Anything else returns RCE.OS object.]]></Description>
 <FormalSpec>OS:%String</FormalSpec>
 <Private>1</Private>
 <ReturnType>%Status</ReturnType>
@@ -60,7 +60,7 @@ Creates new RCE.OS.Linux or RCE.OS.Windows object, depending on OS value.<br>
 <Implementation><![CDATA[
 	return:($d(OS)'=1) $$$OK
 	set OS = $ZCVT(OS,"l")
-	return:(OS = "linux") ##class(RCE.OS.Linux).%New()
+	return:((OS = "linux") || (OS = "unix")) ##class(RCE.OS.Linux).%New()
 	return:(OS = "windows") ##class(RCE.OS.Windows).%New()
 	return $$$OK //$$$ERROR($$$InvalidArgument)
 ]]></Implementation>

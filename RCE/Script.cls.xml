@@ -156,8 +156,6 @@ will be rolled back.]]></Description>
 <IndexLocation>^RCE.ScriptI</IndexLocation>
 <StreamLocation>^RCE.ScriptS</StreamLocation>
 <Data name="ScriptDefaultData">
-<Structure>listnode</Structure>
-<Subscript/>
 <Value name="1">
 <Value>%%CLASSNAME</Value>
 </Value>
@@ -172,6 +170,9 @@ will be rolled back.]]></Description>
 </Value>
 <Value name="5">
 <Value>Type</Value>
+</Value>
+<Value name="6">
+<Value>Name</Value>
 </Value>
 </Data>
 </Storage>
