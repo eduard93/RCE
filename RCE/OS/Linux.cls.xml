@@ -6,6 +6,8 @@
 <TimeCreated>63474,55442.505165</TimeCreated>
 
 <Property name="AuthType">
+<Description>
+Authentication type.</Description>
 <Type>%String</Type>
 <InitialExpression>"Password"</InitialExpression>
 <Parameter name="VALUELIST" value=",Password,Key"/>
@@ -13,19 +15,21 @@
 
 <Property name="PrivateKey">
 <Description>
-Path to PrivateKey</Description>
+Path to PrivateKey. Used only if Authentication type = Key.</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="1000"/>
 </Property>
 
 <Property name="PublicKey">
 <Description>
-Path to PublicKey</Description>
+Path to PublicKey. Used only if Authentication type = Key.</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="1000"/>
 </Property>
 
 <Property name="PrivateKeyPassword">
+<Description>
+Password for Private key (if required). Used only if Authentication type = Key.</Description>
 <Type>%String</Type>
 </Property>
 
@@ -33,7 +37,6 @@ Path to PublicKey</Description>
 <FormalSpec>Script:RCE.Script</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	for i=1:1:Script.Count() {w Script.GetAt(i).Command,!}
 	#dim ssh as %Net.SSH.Session
 	do ..Auth(.ssh)
 	for i=1:1:Script.Count() {
@@ -55,6 +58,7 @@ Path to PublicKey</Description>
 
 <Method name="Auth">
 <FormalSpec><![CDATA[&ssh]]></FormalSpec>
+<Private>1</Private>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set ssh = ##class(%Net.SSH.Session).%New()
@@ -86,6 +90,7 @@ Pass authenticated ssh object to execute command.<br>
 <b>timeout</b> - how long to wait for response.]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[&ssh:%Net.SSH.Session,Command:%String,&Response:%String,Timeout:%Integer=3600]]></FormalSpec>
+<Private>1</Private>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	Set st = ssh.Execute(Command,.tDevice)

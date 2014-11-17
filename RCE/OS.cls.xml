@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="RCE.OS">
+<Description>
+Represents OS.</Description>
 <IncludeCode>%occErrors</IncludeCode>
 <Super>%Persistent</Super>
 <TimeCreated>63474,50472.986157</TimeCreated>
+
+<Parameter name="OS">
+<Type>%String</Type>
+<Expression>$ZCVT($p(%class,".",*),"l")</Expression>
+</Parameter>
 
 <Property name="Username">
 <Type>%String</Type>
@@ -26,6 +33,8 @@
 </Property>
 
 <Property name="Instances">
+<Description>
+All instances installed on this OS.</Description>
 <Type>Instance</Type>
 <Cardinality>children</Cardinality>
 <Inverse>OS</Inverse>
@@ -33,16 +42,21 @@
 </Property>
 
 <Method name="ExecuteScript">
+<Description>
+Execute provided script against OS. Script must be OS-level with all instance-level commands converted to OS level.</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[	Quit $$$OK
 ]]></Implementation>
 </Method>
 
 <Method name="CreateTestScript">
+<Description>
+Returns test script. Includes appropriate OS and instance level commands.</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>RCE.Script</ReturnType>
 <Implementation><![CDATA[
 	set script = ##class(RCE.Script).%New()
+	
 	do script.Insert(##class(RCE.Command).%New("set ^test=1",1))
 	do script.Insert(##class(RCE.Command).%New("set ^test(1)=$zdt($NOW())",1))
 	return script
@@ -54,7 +68,6 @@
 Creates new RCE.OS.Linux or RCE.OS.Windows object, depending on OS value.<br>
 <b>OS</b> - string, values (case-insensitive) : windows, linux, unix. Anything else returns RCE.OS object.]]></Description>
 <FormalSpec>OS:%String</FormalSpec>
-<Private>1</Private>
 <ReturnType>%Status</ReturnType>
 <ServerOnly>1</ServerOnly>
 <Implementation><![CDATA[
@@ -93,6 +106,9 @@ Creates new RCE.OS.Linux or RCE.OS.Windows object, depending on OS value.<br>
 </Value>
 <Value name="6">
 <Value>Bit</Value>
+</Value>
+<Value name="7">
+<Value>Dir</Value>
 </Value>
 </Data>
 </Storage>

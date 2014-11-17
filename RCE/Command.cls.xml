@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="RCE.Command">
-<Super>%Persistent</Super>
+<Description>
+Command. May be OS-level or Caché-level.</Description>
+<Super>%SerialObject</Super>
 <TimeCreated>63474,55169.546273</TimeCreated>
 
 <Property name="Level">
+<Description><![CDATA[
+Command execution level.<br>
+0 - executes against OS (bash or cmd)<br>
+1 - executes against Caché terminal]]></Description>
 <Type>%Boolean</Type>
 </Property>
 
@@ -16,23 +22,15 @@
 </UDLText>
 
 <Property name="Command">
+<Description>
+Command text.</Description>
 <Type>%String</Type>
 </Property>
 
 <Method name="%OnNew">
-<Description><![CDATA[
-This callback method is invoked by the <METHOD>%New</METHOD> method to 
-provide notification that a new instance of an object is being created.
-
-<P>If this method returns an error then the object will not be created.
-<p>It is passed the arguments provided in the %New call.
-When customizing this method, override the arguments with whatever variables and types you expect to receive from %New().
-For example, if you're going to call %New, passing 2 arguments, %OnNew's signature could be:
-<p>Method %OnNew(dob as %Date = "", name as %Name = "") as %Status
-If instead of returning a %Status code this returns an oref and this oref is a subclass of the current
-class then this oref will be the one returned to the caller of %New method.]]></Description>
+<Description>
+Create new command object.</Description>
 <FormalSpec>Command:%String="",Level:%Boolean=1</FormalSpec>
-<Private>1</Private>
 <ReturnType>%Status</ReturnType>
 <ServerOnly>1</ServerOnly>
 <Implementation><![CDATA[

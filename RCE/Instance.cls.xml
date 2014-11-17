@@ -1,28 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="RCE.Instance">
+<Description>
+Represents  one Caché instance.</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63474,52493.217484</TimeCreated>
 
 <Property name="Name">
+<Description>
+Instance name.</Description>
 <Type>%String</Type>
 <InitialExpression>"Cache"</InitialExpression>
+<Required>1</Required>
 </Property>
 
 <Property name="Version">
+<Description>
+Instance version.</Description>
 <Type>%String</Type>
 </Property>
 
 <Property name="Security">
+<Description>
+Instance security settings.</Description>
 <Type>%String</Type>
 <Parameter name="VALUELIST" value=",Minimal,Normal,Locked Down"/>
 </Property>
 
 <Property name="User">
+<Description>
+Caché Username to access instance. Leave empty if not required. </Description>
 <Type>%String</Type>
 </Property>
 
 <Property name="Pass">
+<Description>
+Caché Password to access instance. Leave empty if not required.</Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="Dir">
+<Description>
+Caché installation directory.</Description>
 <Type>%String</Type>
 </Property>
 
@@ -34,14 +53,17 @@
 </Property>
 
 <Method name="ExecuteScript">
+<Description><![CDATA[
+Takes RCE.Script, converts it OS-level RCE.Script and executes it.<br>
+<b>Namespace</b> - initial namespace to execute instance-level commands against.]]></Description>
 <FormalSpec>Script:RCE.Script,Namespace:%String="%SYS"</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st = ..%ValidateObject()
 	return:$$$ISERR(st) st
 	
-	if ($classname(..OS) [ "Linux") do ..BuildScriptLinux(.Script, Namespace)
-	if ($classname(..OS) [ "Windows") do ..BuildScriptWindows(.Script, Namespace)
+	if (..OS.#OS [ "linux") do ..BuildScriptLinux(.Script, Namespace)
+	if (..OS.#OS [ "windows") do ..BuildScriptWindows(.Script, Namespace)
 	
 	set st = ..OS.ExecuteScript(Script)
 	return st
@@ -49,6 +71,9 @@
 </Method>
 
 <Method name="BuildScriptLinux">
+<Description><![CDATA[
+Takes RCE.Script and converts it OS-level RCE.Script.<br>
+<b>Namespace</b> - initial namespace to execute instance-level commands against.]]></Description>
 <FormalSpec><![CDATA[&Script:RCE.Script,Namespace:%String="%SYS"]]></FormalSpec>
 <Implementation><![CDATA[
 	do Script.GetNext(.i)
@@ -76,6 +101,9 @@
 </Method>
 
 <Method name="BuildScriptWindows">
+<Description><![CDATA[
+Takes RCE.Script and converts it bat file (filename returned in Script variable)<br>
+<b>Namespace</b> - initial namespace to execute instance-level commands against.]]></Description>
 <FormalSpec><![CDATA[&Script:RCE.Script,Namespace:%String="%SYS"]]></FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -101,9 +129,8 @@
 				do Script.RemoveAt(k)
 			}
 
-			do Script.InsertAt(instancescript.ConvertInstanceScriptToWindowsCommand(..Name,..User,..Pass, Namespace, ..OS.CtermDir),i)
+			do Script.InsertAt(instancescript.ConvertInstanceScriptToWindowsCommand(..Name,..User,..Pass, Namespace, ##class(%File).SubDirectoryName(..Dir,"bin",1) ,i))
 			do Script.InsertAt(##class(RCE.Command).%New("del commands.txt",0),i+1)
-						
 			
 		} 
 			
@@ -144,6 +171,9 @@
 </Value>
 <Value name="6">
 <Value>Pass</Value>
+</Value>
+<Value name="7">
+<Value>Dir</Value>
 </Value>
 </Data>
 </Storage>
