@@ -12,11 +12,13 @@ Command execution level.<br>
 0 - executes against OS (bash or cmd)<br>
 1 - executes against Caché terminal]]></Description>
 <Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+<Required>1</Required>
 </Property>
 
 <UDLText name="T">
 <Content><![CDATA[
-//(DISPLAYLIST = ",OS,Instance", VALUELIST = ",0,1") [ InitialExpression = 1 ];
+//(DISPLAYLIST = ",OS,Instance", VALUELIST = ",0,1");
 
 ]]></Content>
 </UDLText>
@@ -25,6 +27,7 @@ Command execution level.<br>
 <Description>
 Command text.</Description>
 <Type>%String</Type>
+<Parameter name="MAXLEN" value="1000"/>
 </Property>
 
 <Method name="%OnNew">
@@ -41,11 +44,12 @@ Create new command object.</Description>
 </Method>
 
 <Storage name="Default">
-<Type>%Library.CacheStorage</Type>
+<Type>%Library.CacheSerialState</Type>
 <DataLocation>^RCE.CommandD</DataLocation>
 <DefaultData>CommandDefaultData</DefaultData>
 <IdLocation>^RCE.CommandD</IdLocation>
 <IndexLocation>^RCE.CommandI</IndexLocation>
+<State>CommandState</State>
 <StreamLocation>^RCE.CommandS</StreamLocation>
 <Data name="CommandDefaultData">
 <Structure>listnode</Structure>
@@ -61,6 +65,16 @@ Create new command object.</Description>
 </Value>
 <Value name="4">
 <Value>Level2</Value>
+</Value>
+</Data>
+<Data name="CommandState">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>Level</Value>
+</Value>
+<Value name="2">
+<Value>Command</Value>
 </Value>
 </Data>
 </Storage>

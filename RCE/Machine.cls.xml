@@ -14,6 +14,7 @@ Basic object. Represents physical machine.</Description>
 <Description>
 Any valid address. May be host</Description>
 <Type>%String</Type>
+<Required>1</Required>
 <Parameter name="MAXLEN" value="39"/>
 </Property>
 

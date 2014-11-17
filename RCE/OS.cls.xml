@@ -14,6 +14,7 @@ Represents OS.</Description>
 
 <Property name="Username">
 <Type>%String</Type>
+<Required>1</Required>
 </Property>
 
 <Property name="Password">

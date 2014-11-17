@@ -10,6 +10,7 @@
 Authentication type.</Description>
 <Type>%String</Type>
 <InitialExpression>"Password"</InitialExpression>
+<Required>1</Required>
 <Parameter name="VALUELIST" value=",Password,Key"/>
 </Property>
 
