@@ -9,7 +9,7 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set command = ^settings("exec") _ " \\" _ ..Machine.IP _ " -u " _..Username _ " -p " _ ..Password _ " -accepteula -i -s -c -f " _ Filename
-	w command,!
+	//w command,!
 	set st = $zf(-1,command)
 	Quit st
 ]]></Implementation>
