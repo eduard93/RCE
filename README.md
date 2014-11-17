@@ -24,6 +24,7 @@ set ^settings("test cache version") = {Cache version}<br>
 set ^settings("test cache security") = {Security settings, may be "Minimal","Normal","Locked Down"}<br>
 set ^settings("test cache user") = {Cache username if required}<br>
 set ^settings("test cache password") = {Cache use password, if required}<br>
+set ^settings("test cache dir") = {Caché installation directory}<br>
 
 Usage
 ===
