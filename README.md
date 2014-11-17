@@ -1,7 +1,7 @@
 RCE
 ===
 
-Remote Code Execution for InterSystems Cache.<br>
+Remote Code Execution for InterSystems Caché.<br>
 Can execute code on:<br>
 Windows -> Windows, Linux<br>
 Linux -> Linux
@@ -19,11 +19,11 @@ set ^settings("test username") = {OS username}<br>
 set ^settings("test password") = {OS password{<br>
 set ^settings("test osbit") =  {OS bit: x64 or x86}<br>
 set ^settings("test osname") = {OS "windows" or "linux"}<br>
-set ^settings("test cache name") = {Cache instance name}<br>
-set ^settings("test cache version") = {Cache version}<br>
+set ^settings("test cache name") = {Caché instance name}<br>
+set ^settings("test cache version") = {Caché version}<br>
 set ^settings("test cache security") = {Security settings, may be "Minimal","Normal","Locked Down"}<br>
-set ^settings("test cache user") = {Cache username if required}<br>
-set ^settings("test cache password") = {Cache use password, if required}<br>
+set ^settings("test cache user") = {Caché username if required}<br>
+set ^settings("test cache password") = {Caché user password, if required}<br>
 set ^settings("test cache dir") = {Caché installation directory}<br>
 
 Usage
