@@ -103,7 +103,7 @@ This method demonstrates minimal amount of settings to connect to server. </Desc
 
 <Method name="CreateLocalServer">
 <Description>
-Creates Machine, OS, Instance entry from current instance</Description>
+Creates Machine, OS, Instance entries respectively from current instance</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>OSUser:%String,OSPassword:%String,InstanceUser:%String,InstancePassword:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
