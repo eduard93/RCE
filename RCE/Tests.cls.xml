@@ -113,7 +113,9 @@ from current instance.
 <Implementation><![CDATA[
 	set Machine = ##class(RCE.Machine).%New()
 	set Machine.Description = "local server " _ ##class(%SYSTEM.INetInfo).LocalHostName()
-	set Machine.IP = "127.0.0.1"
+	//http://localhost/csp/docbook/DocBook.UI.Page.cls?KEY=GIOD_udp#GIOD_C101509
+	//$SYSTEM.INetInfo.HostNameToAddr($SYSTEM.INetInfo.AddrToHostName(##class(%Net.UDP).GetHostAddr($SYSTEM.INetInfo.LocalHostName())))
+	set Machine.IP = $SYSTEM.INetInfo.HostNameToAddr($SYSTEM.INetInfo.LocalHostName()) 
 	
 	set OS = ##class(RCE.OS).%New($system.Version.GetOS())
 	set OS.Username = OSUser
